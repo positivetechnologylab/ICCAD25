@@ -1,0 +1,27 @@
+{
+  "mean_kld": {
+    "correlation": -0.021619168095379445,
+    "p_value": 0.5851201546678173,
+    "n_samples": 640
+  },
+  "std_kld": {
+    "correlation": -0.19453307034609785,
+    "p_value": 7.669697861028964e-07,
+    "n_samples": 636
+  },
+  "min_kld": {
+    "correlation": -0.26907016776564646,
+    "p_value": 1.7745327777176795e-11,
+    "n_samples": 604
+  },
+  "max_kld": {
+    "correlation": 0.41970703633372575,
+    "p_value": 1.067043192731308e-28,
+    "n_samples": 640
+  },
+  "spread_kld": {
+    "correlation": 0.4260293664636293,
+    "p_value": 1.3173436311226695e-29,
+    "n_samples": 640
+  }
+}

@@ -1,0 +1,21 @@
+Algorithm ID,Algorithm Name,Number of Qubits
+0,vqe,6
+1,hhl,7
+2,qpe,9
+3,adder,10
+4,sat,11
+5,seca,11
+6,gcm,13
+7,multiply,13
+8,qf21,15
+9,dnn,16
+10,qec9xy,17
+11,bigadder,18
+12,square_root,18
+13,qram,20
+14,knn,25
+15,knn,31
+16,knn,67
+17,swap_test,25
+18,swap_test,83
+19,swap_test,118
