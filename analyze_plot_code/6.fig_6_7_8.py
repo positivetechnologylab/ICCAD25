@@ -1,8 +1,14 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import rc
-
-METHOD = ['RandMap', 'OptiMap', 'EqualDist', 'Anchor']
+import json
+import glob
+import os
+from datetime import datetime
+import numpy as np
+from collections import defaultdict
+import argparse
+from dateutil import parser
 
 params = {
     'font.family': 'serif',
@@ -16,23 +22,11 @@ plt.rcParams.update(params)
 rc('text', usetex=True)
 rc('text.latex', preamble=r'\usepackage{amsmath}')
 
-import json
-import glob
-import os
-from datetime import datetime
-import numpy as np
-import matplotlib.pyplot as plt
-from collections import defaultdict
-import argparse
-from dateutil import parser
-
-# Constants remain the same
 EXCLUDED_INDICES = {15, 16, 18, 19}
 VALID_INDICES = sorted([i for i in range(20) if i not in EXCLUDED_INDICES])
 X_TICK_LABELS = ['VQE', 'HHL', 'QPE1', 'ADD1', 'SAT', 'SECA', 'GCM', 'MULT', 
                  'QPE2', 'DNN', 'QEC', 'ADD2', 'SQRT', 'QRAM', 'KNN1', 'SWAP']
 
-# Predefined timing averages remain the same
 TIMING_AVERAGES = {
     "Algorithm 0":  {"opt1": 2597.68, "opt2": 2546.30, "opt3": 2987.63},
     "Algorithm 1":  {"opt1": 2125.75, "opt2": 1904.13, "opt3": 1703.46},
@@ -327,7 +321,7 @@ def create_boxplot(bin_data):
                     patch_artist=True,
                     widths=0.4,
                     whis=1.5,
-                    showfliers=False,  # Remove outlier dots
+                    showfliers=False,
                     medianprops=dict(color="black", linewidth=1.0),
                     boxprops=dict(linewidth=1.0, edgecolor='black'))
     
@@ -364,9 +358,6 @@ def create_boxplot(bin_data):
     plt.close()
 
 def filter_hourly_data_points(data_points):
-    """
-    Filter data points to keep only one point per computer within each hour window.
-    """
     sorted_points = sorted(data_points)
     last_hour = defaultdict(float)
     filtered_points = []
@@ -380,7 +371,6 @@ def filter_hourly_data_points(data_points):
     return filtered_points
 
 def process_continuous_time_data(start_date, end_date, base_path="."):
-    """Process files and collect KLD data with continuous time."""
     EXCLUDED_INDICES = {15, 16, 18, 19}
     VALID_INDICES = sorted([i for i in range(20) if i not in EXCLUDED_INDICES])
     
@@ -469,11 +459,9 @@ def create_combined_plot(data_points):
     # Sort computers to ensure consistent order
     unique_computers = sorted(set(computer for _, _, computer in data_points))
     
-    # Create subplot for each computer
     for idx, computer in enumerate(unique_computers):
         ax = axes[idx]
         
-        # Get data for this computer
         computer_points = [(h, k) for h, k, comp in data_points if comp == computer]
         computer_points.sort(key=lambda x: x[0])
         
@@ -490,13 +478,12 @@ def create_combined_plot(data_points):
                    linewidth=1,
                    zorder=1)[0]
             
-            # Plot points - modified to handle different marker types correctly
             if marker == 'x':
                 ax.scatter(hours,
                           klds,
                           marker=marker,
                           s=10,
-                          color='black',  # Only use color for 'x' marker
+                          color='black',
                           alpha=0.8,
                           zorder=2)
             else:
@@ -510,7 +497,6 @@ def create_combined_plot(data_points):
                           alpha=0.8,
                           zorder=2)
             
-            # Add legend with only the line
             computer_name = computer.replace('ibm_', '').capitalize()
             ax.legend([line], 
                      [computer_name],
@@ -523,11 +509,9 @@ def create_combined_plot(data_points):
                      borderpad=0.3,
                      edgecolor='black')
         
-        # Only add y-axis label for leftmost plot
         if idx == 0:
             ax.set_ylabel('KLD', fontsize=16)
         
-        # Set y-axis labels only for leftmost plot
         if idx > 0:
             ax.set_yticklabels([])
         
@@ -545,10 +529,8 @@ def create_combined_plot(data_points):
         ax.set_ylim(-1, 1)
         ax.set_xticks(range(0, 73, 12))
     
-    # Add single "Hours" label at the bottom center of the figure
     fig.text(0.5, -0.03, 'Time (3 Day Period)', ha='center', fontsize=16)
     
-    # Adjust subplot spacing - using both wspace and figure adjustments
     plt.subplots_adjust(wspace=0.075, bottom=0.2)
     
     # Save plot
